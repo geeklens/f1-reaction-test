@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Gamepad2, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { HeaderTitle } from '@/components/shared/header-title'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -47,12 +48,8 @@ export default function RootLayout({
 							</Link>
 						</div>
 
-						{/* Middle: Page Title (Large & Centered) */}
-						<Link href='/' className='absolute left-1/2 -translate-x-1/2 z-10'>
-							<h1 className='text-lg md:text-xl font-black tracking-[0.2em] text-foreground/90 uppercase'>
-								Game Hub
-							</h1>
-						</Link>
+						{/* Middle: Dynamic Page Title */}
+						<HeaderTitle />
 
 						{/* Right: Profile Avatar in a tonal circle */}
 						<div className='flex-1 flex justify-end'>

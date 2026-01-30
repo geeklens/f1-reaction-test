@@ -3,38 +3,33 @@
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
-	Clock,
-	Trophy,
-	Gamepad2,
-	Settings,
-	Edit3,
-	Phone,
 	Mail,
+	Phone,
 	Lock,
-	Globe,
-	Palette,
-	Bell,
 	Fingerprint,
+	Palette,
+	Globe,
+	Bell,
 	Send,
 	Instagram,
 	ShieldCheck,
 	Camera,
-	ChevronRight,
+	Settings as SettingsIcon,
 } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { AppCard } from '@/components/shared/app-card'
 
 export default function ProfilePage() {
 	const securityInfo = [
-		{ label: 'Email', value: 'davlat@example.com', icon: Mail },
-		{ label: 'Phone', value: '+998 90 123 45 67', icon: Phone },
-		{ label: 'Password', value: '••••••••••••', icon: Lock },
-		{ label: '2FA Auth', value: 'Enabled', icon: Fingerprint },
+		{ label: 'Email', value: 'davlat@example.com', icon: Mail, action: 'Edit' },
+		{ label: 'Phone', value: '+998 90 123 45 67', icon: Phone, action: 'Edit' },
+		{ label: 'Password', value: '••••••••••••', icon: Lock, action: 'Edit' },
+		{ label: '2FA Auth', value: 'Enabled', icon: Fingerprint, action: 'Edit' },
 	]
 
 	const siteSettings = [
-		{ label: 'Appearance', value: 'Dark Mode', icon: Palette },
-		{ label: 'Language', value: 'English (US)', icon: Globe },
-		{ label: 'Notifications', value: 'Active', icon: Bell },
+		{ label: 'Appearance', value: 'Dark Mode', icon: Palette, action: 'More' },
+		{ label: 'Language', value: 'English (US)', icon: Globe, action: 'More' },
+		{ label: 'Notifications', value: 'Active', icon: Bell, action: 'More' },
 	]
 
 	return (
@@ -68,7 +63,6 @@ export default function ProfilePage() {
 						</div>
 
 						<div className='w-full space-y-6'>
-							{/* CLEAN BIO (No card background) */}
 							<div className='space-y-2'>
 								<h3 className='text-[9px] font-black text-primary/60 uppercase tracking-[0.2em] px-1'>
 									Bio
@@ -81,7 +75,6 @@ export default function ProfilePage() {
 								</div>
 							</div>
 
-							{/* Social Links Side-by-Side */}
 							<div className='space-y-2'>
 								<h3 className='text-[9px] font-black text-primary/60 uppercase tracking-[0.2em] px-1'>
 									Connect
@@ -110,26 +103,22 @@ export default function ProfilePage() {
 						</div>
 					</section>
 
-					{/* Mini Stats */}
 					<div className='bg-secondary/10 rounded-[24px] p-4 grid grid-cols-3 gap-1'>
-						<div className='text-center'>
-							<p className='text-base font-black italic'>2.4k</p>
-							<p className='text-[7px] font-bold uppercase text-muted-foreground'>
-								Hrs
-							</p>
-						</div>
-						<div className='text-center border-x border-white/5'>
-							<p className='text-base font-black italic'>843</p>
-							<p className='text-[7px] font-bold uppercase text-muted-foreground'>
-								Pts
-							</p>
-						</div>
-						<div className='text-center'>
-							<p className='text-base font-black italic'>124</p>
-							<p className='text-[7px] font-bold uppercase text-muted-foreground'>
-								Lib
-							</p>
-						</div>
+						{[
+							{ v: '2.4k', l: 'Hrs' },
+							{ v: '843', l: 'Pts' },
+							{ v: '124', l: 'Lib' },
+						].map((s, i) => (
+							<div
+								key={s.l}
+								className={`text-center ${i === 1 ? 'border-x border-white/5' : ''}`}
+							>
+								<p className='text-base font-black italic'>{s.v}</p>
+								<p className='text-[7px] font-bold uppercase text-muted-foreground'>
+									{s.l}
+								</p>
+							</div>
+						))}
 					</div>
 				</div>
 
@@ -150,36 +139,19 @@ export default function ProfilePage() {
 						</div>
 						<div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
 							{securityInfo.map(info => (
-								<div
+								<AppCard
 									key={info.label}
-									className='flex items-center justify-between p-4 rounded-[20px] bg-secondary/10 hover:bg-secondary/20 transition-all group border border-transparent hover:border-primary/5'
-								>
-									<div className='flex items-center gap-4'>
-										<div className='w-10 h-10 rounded-xl bg-background flex items-center justify-center text-primary/40 group-hover:text-primary transition-all'>
-											<info.icon className='w-4 h-4' />
-										</div>
-										<div className='min-w-0'>
-											<p className='text-[8px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1'>
-												{info.label}
-											</p>
-											<p className='text-sm font-bold text-foreground truncate'>
-												{info.value}
-											</p>
-										</div>
-									</div>
-									<Button
-										variant='ghost'
-										size='icon'
-										className='h-8 w-8 rounded-full border border-muted-foreground/10 group-hover:border-primary'
-									>
-										<Edit3 className='w-3 h-3' />
-									</Button>
-								</div>
+									variant='info'
+									label={info.label}
+									value={info.value}
+									icon={info.icon}
+									actionLabel={info.action}
+								/>
 							))}
 						</div>
 					</section>
 
-					{/* Site Settings Subsection (Now matching Security design) */}
+					{/* Site Settings Subsection */}
 					<section className='bg-card rounded-[32px] p-8 border border-white/5'>
 						<div className='mb-6 flex justify-between items-center px-1'>
 							<div>
@@ -190,35 +162,18 @@ export default function ProfilePage() {
 									Experience Preferences
 								</p>
 							</div>
-							<Settings className='w-6 h-6 text-primary/20' />
+							<SettingsIcon className='w-6 h-6 text-primary/20' />
 						</div>
 						<div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
 							{siteSettings.map(setting => (
-								<div
+								<AppCard
 									key={setting.label}
-									className='flex items-center justify-between p-4 rounded-[20px] bg-secondary/10 hover:bg-secondary/20 transition-all group border border-transparent hover:border-primary/5'
-								>
-									<div className='flex items-center gap-4'>
-										<div className='w-10 h-10 rounded-xl bg-background flex items-center justify-center text-primary/40 group-hover:text-primary transition-all'>
-											<setting.icon className='w-4 h-4' />
-										</div>
-										<div className='min-w-0'>
-											<p className='text-[8px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1'>
-												{setting.label}
-											</p>
-											<p className='text-sm font-bold text-foreground truncate'>
-												{setting.value}
-											</p>
-										</div>
-									</div>
-									<Button
-										variant='ghost'
-										size='icon'
-										className='h-8 w-8 rounded-full border border-muted-foreground/10 group-hover:border-primary'
-									>
-										<ChevronRight className='w-3 h-3' />
-									</Button>
-								</div>
+									variant='info'
+									label={setting.label}
+									value={setting.value}
+									icon={setting.icon}
+									actionLabel={setting.action}
+								/>
 							))}
 						</div>
 					</section>

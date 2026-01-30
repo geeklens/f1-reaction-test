@@ -1,23 +1,22 @@
 'use client'
 
-import {
-	Clock,
-	Play,
-	TrendingUp,
-	Info,
-	Gamepad2,
-	ArrowRight,
-} from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
+import { TrendingUp, Info, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { AppCard } from '@/components/shared/app-card'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+	const router = useRouter()
 	const recentGames = [
-		{ title: 'Neural Reaction', lastPlayed: '2h ago' },
-		{ title: 'Cyberpunk 2077', lastPlayed: 'Yesterday' },
-		{ title: 'Void Hunter', lastPlayed: '3d ago' },
+		{ title: 'Neural Reaction', lastPlayed: '2h ago', slug: 'neural-reaction' },
+		{
+			title: 'Cyberpunk 2077',
+			lastPlayed: 'Yesterday',
+			slug: 'cyber-adventure',
+		}, // Mapping to a slug we have
+		{ title: 'Void Hunter', lastPlayed: '3d ago', slug: 'void-hunter' },
 	]
 
 	return (
@@ -60,28 +59,12 @@ export default function Home() {
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{ delay: i * 0.05 }}
 						>
-							<div className='group bg-secondary/10 hover:bg-secondary/20 rounded-[24px] p-5 transition-all cursor-pointer flex items-center justify-between border border-transparent hover:border-primary/5'>
-								<div className='flex items-center gap-4'>
-									<div className='w-12 h-12 rounded-2xl bg-background flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all'>
-										<Gamepad2 className='w-6 h-6' />
-									</div>
-									<div>
-										<h4 className='font-bold text-foreground text-sm tracking-tight'>
-											{game.title}
-										</h4>
-										<p className='text-[10px] text-muted-foreground font-bold uppercase tracking-widest'>
-											{game.lastPlayed}
-										</p>
-									</div>
-								</div>
-								<Button
-									size='icon'
-									variant='ghost'
-									className='rounded-full bg-background/50 hover:bg-primary hover:text-primary-foreground transition-all h-10 w-10'
-								>
-									<Play className='w-4 h-4 fill-current' />
-								</Button>
-							</div>
+							<AppCard
+								variant='recent'
+								title={game.title}
+								subtitle={game.lastPlayed.toUpperCase()}
+								onAction={() => router.push(`/game/${game.slug}`)}
+							/>
 						</motion.div>
 					))}
 				</div>
@@ -89,38 +72,20 @@ export default function Home() {
 
 			{/* Unified Surface Sections */}
 			<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-				<section className='p-8 rounded-[32px] bg-card border border-white/5 space-y-4 relative overflow-hidden group hover:bg-secondary/10 transition-colors'>
-					<div className='relative z-10'>
-						<div className='flex items-center gap-3 text-primary mb-4'>
-							<div className='p-3 rounded-2xl bg-primary/10'>
-								<TrendingUp className='w-6 h-6' />
-							</div>
-							<h3 className='font-black uppercase tracking-widest text-xs'>
-								Performance
-							</h3>
-						</div>
-						<p className='text-foreground/90 text-lg leading-relaxed font-bold'>
+				<AppCard
+					title='Performance'
+					icon={TrendingUp}
+					actionLabel='View Analytics'
+					onAction={() => {}}
+					description={
+						<>
 							Your focus levels are{' '}
 							<span className='text-primary'>12% higher</span> than last week.
-						</p>
-						<Button
-							variant='link'
-							className='p-0 h-auto text-primary font-bold mt-2'
-						>
-							View Analytics
-						</Button>
-					</div>
-				</section>
+						</>
+					}
+				/>
 
-				<section className='p-8 rounded-[32px] bg-card border border-white/5 space-y-4 group hover:bg-secondary/10 transition-colors'>
-					<div className='flex items-center gap-3 text-primary mb-4'>
-						<div className='p-3 rounded-2xl bg-primary/10'>
-							<Info className='w-6 h-6' />
-						</div>
-						<h3 className='font-black uppercase tracking-widest text-xs'>
-							System Status
-						</h3>
-					</div>
+				<AppCard title='System Status' icon={Info} onAction={() => {}}>
 					<div className='space-y-4'>
 						<div className='flex items-center gap-3 p-4 rounded-2xl bg-secondary/10'>
 							<div className='w-2 h-2 rounded-full bg-primary animate-pulse' />
@@ -135,7 +100,7 @@ export default function Home() {
 							</p>
 						</div>
 					</div>
-				</section>
+				</AppCard>
 			</div>
 		</div>
 	)
