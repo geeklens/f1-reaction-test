@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import { Suspense } from 'react'
-import { GAME_METADATA, GAMES } from '@/modules/games/registry'
+import { ALL_GAMES } from '@/modules/games/registry'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Gamepad2 } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -13,10 +13,10 @@ export default function GamePage() {
 
 	const gameSlug =
 		typeof slug === 'string' ? slug : Array.isArray(slug) ? slug[0] : ''
-	const metadata = GAME_METADATA[gameSlug]
-	const DynamicGame = GAMES[gameSlug]
 
-	if (!metadata || !DynamicGame) {
+	const gameModule = ALL_GAMES[gameSlug]
+
+	if (!gameModule) {
 		return (
 			<div className='flex flex-col items-center justify-center min-h-[60vh] space-y-4'>
 				<h1 className='text-4xl font-black italic uppercase'>404</h1>
@@ -25,6 +25,8 @@ export default function GamePage() {
 			</div>
 		)
 	}
+
+	const { meta, Component: DynamicGame } = gameModule
 
 	return (
 		<div className='space-y-4 md:space-y-6 pb-10'>
@@ -44,7 +46,7 @@ export default function GamePage() {
 					</div>
 					<div className='min-w-0'>
 						<h1 className='text-lg md:text-xl font-black italic uppercase leading-none truncate'>
-							{metadata.title}
+							{meta.title}
 						</h1>
 						<p className='text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1'>
 							In-game session
@@ -61,7 +63,7 @@ export default function GamePage() {
 				<Suspense
 					fallback={
 						<div className='flex items-center justify-center min-h-[400px]'>
-							Loading...
+							<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-primary'></div>
 						</div>
 					}
 				>

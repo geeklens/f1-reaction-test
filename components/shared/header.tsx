@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import {
 	Gamepad2,
@@ -19,13 +19,41 @@ import { Input } from '@/components/ui/input'
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog'
+import { CommandRegistry, Command } from '@/modules/navigation/commands'
+import { useRouter } from 'next/navigation'
+import { UnifiedItem } from '@/components/shared/unified-item'
 
 export function Header() {
 	const [open, setOpen] = useState(false)
+	const [searchQuery, setSearchQuery] = useState('')
+	const router = useRouter()
+
+	const trendingGames = useMemo(() => {
+		return CommandRegistry.getGameCommands().slice(0, 4)
+	}, [])
+
+	const quickActions = useMemo(() => {
+		return CommandRegistry.getQuickActions()
+	}, [])
+
+	const searchResults = useMemo(() => {
+		return CommandRegistry.search(searchQuery)
+	}, [searchQuery])
+
+	const handleCommand = (command: Command) => {
+		if (command.path) {
+			router.push(command.path)
+		} else if (command.onAction) {
+			command.onAction()
+		}
+		setOpen(false)
+		setSearchQuery('')
+	}
 
 	useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -85,11 +113,20 @@ export function Header() {
 							showCloseButton={false}
 							className='w-screen h-screen sm:h-auto sm:max-w-[600px] sm:w-full p-0 bg-background/95 sm:bg-background/80 backdrop-blur-3xl border-none sm:border-white/10 rounded-none sm:rounded-[32px] gap-0 overflow-hidden shadow-none sm:shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] top-0 left-0 translate-x-0 translate-y-0 sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] flex flex-col'
 						>
+							<DialogHeader className='sr-only'>
+								<DialogTitle>Search Palette</DialogTitle>
+								<DialogDescription>
+									Search for games, stats and settings across the platform.
+								</DialogDescription>
+							</DialogHeader>
+
 							<div className='p-6 border-b border-white/5 flex-none'>
 								<div className='relative group'>
 									<Search className='absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary transition-transform group-focus-within:scale-110' />
 									<Input
 										placeholder='Search for precision tests, stats or settings...'
+										value={searchQuery}
+										onChange={e => setSearchQuery(e.target.value)}
 										className='h-16 pl-14 bg-white/[0.03] border-white/10 rounded-[20px] text-lg font-medium focus:ring-primary focus:bg-white/[0.05] transition-all'
 									/>
 									<div className='absolute right-4 top-1/2 -translate-y-1/2 flex gap-1 opacity-50'>
@@ -102,6 +139,32 @@ export function Header() {
 
 							<div className='flex-1 overflow-y-auto p-4 scrollbar-hide sm:max-h-[450px]'>
 								<div className='space-y-6'>
+									{/* Search Results */}
+									{searchResults.length > 0 && (
+										<div className='space-y-2'>
+											<h4 className='px-4 text-[10px] font-black uppercase tracking-[0.2em] text-primary/60'>
+												Search Results
+											</h4>
+											<div className='space-y-1'>
+												{searchResults.map(command => (
+													<UnifiedItem
+														key={command.id}
+														variant='action'
+														icon={command.icon}
+														title={command.title}
+														subtitle={command.subtitle}
+														onClick={() => handleCommand(command)}
+														rightAction={
+															<span className='text-[8px] font-black opacity-30 group-hover:opacity-100 uppercase tracking-widest'>
+																Launch
+															</span>
+														}
+													/>
+												))}
+											</div>
+										</div>
+									)}
+
 									{/* Recent Searches */}
 									<div className='space-y-2'>
 										<h4 className='px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60'>
@@ -113,15 +176,13 @@ export function Header() {
 												'Neural Sorting Grid',
 												'Elite Predator Stats',
 											].map(item => (
-												<button
+												<UnifiedItem
 													key={item}
-													className='w-full flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/5 transition-colors text-sm font-bold italic group'
-												>
-													<HistoryIcon className='w-4 h-4 opacity-40 group-hover:text-primary group-hover:opacity-100 transition-all' />
-													<span className='group-hover:translate-x-1 transition-transform'>
-														{item}
-													</span>
-												</button>
+													variant='action'
+													icon={HistoryIcon}
+													title={item}
+													onClick={() => {}}
+												/>
 											))}
 										</div>
 									</div>
@@ -132,39 +193,15 @@ export function Header() {
 											Trending Now
 										</h4>
 										<div className='grid grid-cols-2 gap-2 px-2'>
-											{[
-												{
-													name: 'Neural Reaction',
-													icon: Zap,
-													color: 'text-purple-500',
-												},
-												{
-													name: 'Speed Sort',
-													icon: Target,
-													color: 'text-blue-500',
-												},
-												{
-													name: 'Aim Precision',
-													icon: Trophy,
-													color: 'text-amber-500',
-												},
-												{
-													name: 'Reaction Pro',
-													icon: Gamepad2,
-													color: 'text-emerald-500',
-												},
-											].map(game => (
-												<button
-													key={game.name}
-													className='flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all text-xs font-black italic uppercase text-left group'
-												>
-													<div
-														className={`p-2 rounded-xl bg-background/50 ${game.color} group-hover:scale-110 transition-transform`}
-													>
-														<game.icon className='w-4 h-4' />
-													</div>
-													{game.name}
-												</button>
+											{trendingGames.map(game => (
+												<UnifiedItem
+													key={game.id}
+													variant='row'
+													icon={game.icon}
+													title={game.title}
+													onClick={() => handleCommand(game)}
+													className='p-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all uppercase italic text-[10px] font-black'
+												/>
 											))}
 										</div>
 									</div>
@@ -175,26 +212,17 @@ export function Header() {
 											Quick Actions
 										</h4>
 										<div className='space-y-1'>
-											{[
-												{ name: 'Go to Profile', icon: User, path: '/profile' },
-												{
-													name: 'View Global Leaderboard',
-													icon: Trophy,
-													path: '/leaderboard',
-												},
-											].map(action => (
-												<button
-													key={action.name}
-													className='w-full flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-white/5 transition-colors text-sm font-bold italic group'
-												>
-													<div className='flex items-center gap-3'>
-														<action.icon className='w-4 h-4 opacity-40 group-hover:text-primary group-hover:opacity-100 transition-all' />
-														<span className='group-hover:translate-x-1 transition-transform'>
-															{action.name}
-														</span>
-													</div>
-													<ChevronRight className='w-4 h-4 opacity-0 group-hover:opacity-40 transition-opacity' />
-												</button>
+											{quickActions.map(action => (
+												<UnifiedItem
+													key={action.id}
+													variant='action'
+													icon={action.icon}
+													title={action.title}
+													onClick={() => handleCommand(action)}
+													rightAction={
+														<ChevronRight className='w-4 h-4 opacity-0 group-hover:opacity-40 transition-opacity' />
+													}
+												/>
 											))}
 										</div>
 									</div>

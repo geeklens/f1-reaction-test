@@ -107,4 +107,29 @@
   .m3-button-filled {
     @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-full h-12 px-8 transition-all font-bold;
   }
+
+  /* Custom Scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+    opacity: 0.5;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(from var(--primary) calc(l + 0.1) c h);
+  }
 }

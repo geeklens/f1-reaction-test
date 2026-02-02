@@ -1,54 +1,55 @@
 'use client'
 
-import {
-	LucideIcon,
-	Gamepad2,
-	Play,
-	ArrowRight,
-	ChevronRight,
-	Edit3,
-} from 'lucide-react'
+import React, { ReactNode } from 'react'
+import { LucideIcon, Gamepad2, Play, ChevronRight, Edit3 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
-import { ReactNode } from 'react'
 
-interface AppCardProps {
-	variant?: 'catalog' | 'recent' | 'info' | 'section'
+interface UnifiedItemProps {
+	variant?: 'row' | 'stat' | 'card' | 'action' | 'catalog' | 'recent' | 'info'
+	icon?: LucideIcon
 	title?: string
 	subtitle?: string
-	description?: ReactNode
+	description?: string | ReactNode
+	value?: string | number
+	label?: string
+	rightAction?: ReactNode
+	iconColor?: string
+	className?: string
+	iconClassName?: string
+	children?: ReactNode
+	onClick?: () => void
+	onAction?: () => void
+	active?: boolean
 	category?: string
 	price?: string
-	icon?: LucideIcon
-	image?: string
-	actionLabel?: string
-	onAction?: () => void
-	className?: string
-	children?: ReactNode
 	isFree?: boolean
-	label?: string
-	value?: string
-	iconClassName?: string
+	actionLabel?: string
 }
 
-export function AppCard({
-	variant = 'section',
+export function UnifiedItem({
+	variant = 'row',
+	icon: Icon = Gamepad2,
 	title,
 	subtitle,
 	description,
+	value,
+	label,
+	rightAction,
+	iconColor = 'text-primary',
+	className,
+	iconClassName,
+	children,
+	onClick,
+	onAction,
+	active,
 	category,
 	price,
-	icon: Icon = Gamepad2,
-	actionLabel,
-	onAction,
-	className,
-	children,
 	isFree,
-	label,
-	value,
-	iconClassName,
-}: AppCardProps) {
+	actionLabel,
+}: UnifiedItemProps) {
+	// 1. Catalog Variant
 	if (variant === 'catalog') {
 		return (
 			<div
@@ -56,7 +57,7 @@ export function AppCard({
 					'group bg-card rounded-[32px] p-6 hover:bg-secondary/10 transition-all cursor-pointer border border-white/5 hover:border-primary/10',
 					className,
 				)}
-				onClick={onAction}
+				onClick={onAction || onClick}
 			>
 				<div className='flex items-start justify-between mb-8'>
 					<div className='w-14 h-14 rounded-2xl bg-secondary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300'>
@@ -68,7 +69,6 @@ export function AppCard({
 						</Badge>
 					)}
 				</div>
-
 				<div className='space-y-1 mb-8'>
 					<p className='text-[10px] font-black text-primary/40 uppercase tracking-[0.2em]'>
 						{category}
@@ -77,7 +77,6 @@ export function AppCard({
 						{title}
 					</h3>
 				</div>
-
 				<div className='flex items-center justify-between pt-6 border-t border-muted/20'>
 					<span className='font-bold text-foreground/50'>{price}</span>
 					<Button
@@ -91,6 +90,7 @@ export function AppCard({
 		)
 	}
 
+	// 2. Recent Variant
 	if (variant === 'recent') {
 		return (
 			<div
@@ -98,7 +98,7 @@ export function AppCard({
 					'group bg-secondary/10 hover:bg-secondary/20 rounded-[24px] p-5 transition-all cursor-pointer flex items-center justify-between border border-transparent hover:border-primary/5',
 					className,
 				)}
-				onClick={onAction}
+				onClick={onAction || onClick}
 			>
 				<div className='flex items-center gap-4'>
 					<div className='w-12 h-12 rounded-2xl bg-background flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all'>
@@ -124,6 +124,7 @@ export function AppCard({
 		)
 	}
 
+	// 3. Info Variant
 	if (variant === 'info') {
 		const ActionIcon = actionLabel === 'Edit' ? Edit3 : ChevronRight
 		return (
@@ -132,7 +133,7 @@ export function AppCard({
 					'flex items-center justify-between p-4 rounded-[20px] bg-secondary/10 hover:bg-secondary/20 transition-all group border border-transparent hover:border-primary/5',
 					className,
 				)}
-				onClick={onAction}
+				onClick={onAction || onClick}
 			>
 				<div className='flex items-center gap-4'>
 					<div
@@ -163,6 +164,93 @@ export function AppCard({
 		)
 	}
 
+	// 4. Row Variant
+	if (variant === 'row') {
+		return (
+			<div
+				className={cn(
+					'flex items-center justify-between group',
+					(onClick || onAction) && 'cursor-pointer',
+					className,
+				)}
+				onClick={onAction || onClick}
+			>
+				<div className='flex items-center gap-4 min-w-0 overflow-hidden'>
+					<div className='p-2.5 rounded-xl bg-secondary/20 text-primary group-hover:scale-110 transition-transform flex-shrink-0'>
+						<Icon className='w-4 h-4' />
+					</div>
+					<div className='space-y-0.5 min-w-0'>
+						<p className='text-[11px] font-bold text-foreground leading-none'>
+							{title}
+						</p>
+						{(subtitle || description) && (
+							<p className='text-[9px] text-muted-foreground uppercase tracking-widest font-bold leading-none truncate'>
+								{subtitle || description}
+							</p>
+						)}
+					</div>
+				</div>
+				{rightAction && <div className='flex-shrink-0'>{rightAction}</div>}
+			</div>
+		)
+	}
+
+	// 5. Stat Variant
+	if (variant === 'stat') {
+		return (
+			<div
+				className={cn(
+					'bg-secondary/5 hover:bg-secondary/10 transition-colors rounded-2xl p-3.5 flex items-center gap-3 group border border-white/5',
+					className,
+				)}
+			>
+				<div
+					className={cn(
+						'p-2.5 rounded-xl bg-background/50 shadow-inner group-hover:scale-105 transition-transform flex-shrink-0',
+						iconColor,
+					)}
+				>
+					<Icon className='w-5 h-5' />
+				</div>
+				<div className='-space-y-0.5 min-w-0'>
+					<p className='text-lg font-black italic truncate'>{value}</p>
+					<p className='text-[8px] font-bold uppercase text-muted-foreground tracking-tighter truncate'>
+						{title}
+					</p>
+				</div>
+			</div>
+		)
+	}
+
+	// 6. Action Variant
+	if (variant === 'action') {
+		return (
+			<button
+				onClick={onAction || onClick}
+				className={cn(
+					'w-full flex items-center justify-between px-4 py-3 rounded-2xl hover:bg-white/5 transition-colors text-sm font-bold italic group text-left',
+					className,
+				)}
+			>
+				<div className='flex items-center gap-3 min-w-0'>
+					<Icon className='w-4 h-4 opacity-40 group-hover:text-primary group-hover:opacity-100 transition-all flex-shrink-0' />
+					<div className='flex flex-col min-w-0'>
+						<span className='group-hover:translate-x-1 transition-transform'>
+							{title}
+						</span>
+						{subtitle && (
+							<span className='text-[10px] opacity-30 group-hover:opacity-60 transition-opacity uppercase tracking-widest font-black truncate'>
+								{subtitle}
+							</span>
+						)}
+					</div>
+				</div>
+				{rightAction}
+			</button>
+		)
+	}
+
+	// 7. Default Card Variant
 	return (
 		<section
 			className={cn(
@@ -175,7 +263,7 @@ export function AppCard({
 					<div className='p-3 rounded-2xl bg-primary/10'>
 						<Icon className='w-6 h-6' />
 					</div>
-					<h3 className='font-black uppercase tracking-widest text-xs'>
+					<h3 className='font-black uppercase tracking-widest text-xs truncate'>
 						{title}
 					</h3>
 				</div>
@@ -188,7 +276,7 @@ export function AppCard({
 					<Button
 						variant='link'
 						className='p-0 h-auto text-primary font-bold mt-2'
-						onClick={onAction}
+						onClick={onAction || onClick}
 					>
 						{actionLabel}
 					</Button>

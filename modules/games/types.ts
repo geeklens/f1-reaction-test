@@ -1,3 +1,5 @@
+import { ComponentType } from 'react'
+
 export type GameCategory =
 	| 'Training'
 	| 'Action'
@@ -8,6 +10,9 @@ export type GameCategory =
 	| 'Shooter'
 	| 'Sports'
 
+/**
+ * Basic metadata for any game in the catalog.
+ */
 export interface GameMetadata {
 	slug: string
 	title: string
@@ -16,13 +21,21 @@ export interface GameMetadata {
 	price: string
 }
 
-export interface GameModule extends GameMetadata {
-	init?: () => void
-	destroy?: () => void
+/**
+ * Standardized result of a single game session.
+ */
+export interface SessionResult {
+	timestamp: number
+	score: number
+	unit: 'ms' | 'pts' | '%'
+	accuracy?: number
+	isPersonalBest: boolean
 }
 
-export interface GameComponentProps {
-	metadata: GameMetadata
+/**
+ * Strict contract for any game module in the system.
+ */
+export interface GameModule {
+	meta: GameMetadata
+	Component: ComponentType
 }
-
-export type GameComponent = React.ComponentType<GameComponentProps>

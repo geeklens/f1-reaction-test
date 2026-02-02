@@ -1,91 +1,33 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Timer, Zap, RotateCcw, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-
-type GameStatus = 'idle' | 'starting' | 'ready' | 'result' | 'false-start'
+import { useNeuralReaction } from './use-neural-reaction'
+import { useEffect } from 'react'
 
 export default function NeuralReaction() {
-	const [status, setStatus] = useState<GameStatus>('idle')
-	const [lightsCount, setLightsCount] = useState(0)
-	const [reactionTime, setReactionTime] = useState<number | null>(null)
-	const [lastTime, setLastTime] = useState<number | null>(null)
-	const [bestTime, setBestTime] = useState<number | null>(null)
+	const {
+		status,
+		lightsCount,
+		reactionTime,
+		lastTime,
+		bestTime,
+		start,
+		trigger,
+	} = useNeuralReaction()
 
-	const startTimeRef = useRef<number>(0)
-	const timerRef = useRef<NodeJS.Timeout | null>(null)
-
-	// Load best time from localStorage
+	// Keyboard support
 	useEffect(() => {
-		const storedBest = localStorage.getItem('neural_reaction_best')
-		if (storedBest) {
-			setBestTime(Number(storedBest))
-			setLastTime(Number(storedBest)) // Set last to best initially if exists
-		}
-	}, [])
-
-	/**
-	 * Starts the F1-style light sequence.
-	 * 1. Cycles through 5 red lights.
-	 * 2. Waits for a random delay.
-	 * 3. Turns off lights and sets status to 'ready' to begin reaction timing.
-	 */
-	const startSequence = () => {
-		setStatus('starting')
-		setLightsCount(0)
-		setReactionTime(null)
-
-		let count = 0
-		const interval = setInterval(() => {
-			count++
-			setLightsCount(count)
-			if (count === 5) {
-				clearInterval(interval)
-				// Random delay before lights out (between 1s and 3s)
-				const delay = 1000 + Math.random() * 2000
-				timerRef.current = setTimeout(() => {
-					setLightsCount(0)
-					setStatus('ready')
-					startTimeRef.current = performance.now()
-				}, delay)
-			}
-		}, 800)
-		timerRef.current = interval
-	}
-
-	const handleClick = () => {
-		if (status === 'idle' || status === 'result' || status === 'false-start') {
-			startSequence()
-		} else if (status === 'starting') {
-			// Clicked too early
-			if (timerRef.current) clearInterval(timerRef.current)
-			if (timerRef.current) clearTimeout(timerRef.current)
-			setStatus('false-start')
-		} else if (status === 'ready') {
-			const endTime = performance.now()
-			const finalTime = endTime - startTimeRef.current
-			setReactionTime(finalTime)
-			setLastTime(finalTime)
-			setStatus('result')
-
-			// Update best time
-			if (!bestTime || finalTime < bestTime) {
-				setBestTime(finalTime)
-				localStorage.setItem('neural_reaction_best', finalTime.toString())
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.code === 'Space') {
+				e.preventDefault()
+				trigger()
 			}
 		}
-	}
-
-	useEffect(() => {
-		return () => {
-			if (timerRef.current) {
-				clearInterval(timerRef.current)
-				clearTimeout(timerRef.current)
-			}
-		}
-	}, [])
+		window.addEventListener('keydown', handleKeyDown)
+		return () => window.removeEventListener('keydown', handleKeyDown)
+	}, [trigger])
 
 	const mockLeaderboard = [
 		{ name: 'Max Verstappen', time: 168, rank: 1 },
@@ -104,13 +46,13 @@ export default function NeuralReaction() {
 		<div className='space-y-8'>
 			<div
 				className={`relative h-[500px] w-full rounded-[32px] overflow-hidden cursor-pointer ${
-					status === 'ready'
+					status === 'running'
 						? 'bg-primary/20'
 						: status === 'false-start'
 							? 'bg-destructive/10'
 							: 'bg-secondary/5'
 				}`}
-				onClick={handleClick}
+				onClick={trigger}
 			>
 				{/* Grid Background Effect */}
 				<div className='absolute inset-0 opacity-[0.03] pointer-events-none'>
@@ -125,13 +67,13 @@ export default function NeuralReaction() {
 				</div>
 
 				<div className='relative z-10 h-full w-full flex flex-col items-center pt-20 select-none'>
-					{/* F1 Lights Housing - Stabilized at the top */}
+					{/* F1 Lights Housing */}
 					<div className='bg-zinc-900 rounded-[24px] p-6 shadow-2xl border-4 border-zinc-800 flex gap-4 md:gap-8'>
 						{[0, 1, 2, 3, 4].map(idx => (
 							<div key={idx} className='flex flex-col gap-3'>
 								<div
 									className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-4 border-zinc-800 ${
-										status === 'ready'
+										status === 'running'
 											? 'bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.8)]'
 											: lightsCount > idx
 												? 'bg-red-600 shadow-[0_0_30px_rgba(220,38,38,0.8)]'
@@ -140,7 +82,7 @@ export default function NeuralReaction() {
 								/>
 								<div
 									className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-4 border-zinc-800 ${
-										status === 'ready'
+										status === 'running'
 											? 'bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.8)]'
 											: lightsCount > idx
 												? 'bg-red-600 shadow-[0_0_30px_rgba(220,38,38,0.8)]'
@@ -151,7 +93,7 @@ export default function NeuralReaction() {
 						))}
 					</div>
 
-					{/* Status Message Area - No animations for zero distraction */}
+					{/* Status Message Area */}
 					<div className='mt-16 w-full max-w-xl px-6 flex flex-col items-center justify-start h-48 relative'>
 						<AnimatePresence mode='wait'>
 							{status === 'idle' && (
@@ -170,14 +112,14 @@ export default function NeuralReaction() {
 										Neural Reaction
 									</h3>
 									<p className='text-muted-foreground font-bold uppercase tracking-widest text-[10px]'>
-										Click anywhere to start the countdown
+										Click or Press [SPACE] to start
 									</p>
 								</motion.div>
 							)}
 
-							{status === 'starting' && (
+							{status === 'countdown' && (
 								<motion.div
-									key='starting'
+									key='countdown'
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
@@ -190,17 +132,17 @@ export default function NeuralReaction() {
 								</motion.div>
 							)}
 
-							{status === 'ready' && (
-								<div key='ready' className='text-center'>
+							{status === 'running' && (
+								<div key='running' className='text-center'>
 									<h2 className='text-6xl md:text-8xl font-black italic uppercase tracking-tight text-primary drop-shadow-[0_0_30px_rgba(var(--primary),0.5)]'>
 										CLICK!
 									</h2>
 								</div>
 							)}
 
-							{status === 'result' && (
+							{status === 'finished' && (
 								<motion.div
-									key='result'
+									key='finished'
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
@@ -223,7 +165,7 @@ export default function NeuralReaction() {
 											className='m3-button-tonal gap-2 px-8 h-10 text-xs'
 											onClick={e => {
 												e.stopPropagation()
-												startSequence()
+												start()
 											}}
 										>
 											<RotateCcw className='w-4 h-4' />
@@ -256,7 +198,7 @@ export default function NeuralReaction() {
 										className='m3-button-tonal gap-2 px-8 h-10 text-xs'
 										onClick={e => {
 											e.stopPropagation()
-											startSequence()
+											start()
 										}}
 									>
 										Try Again

@@ -4,8 +4,10 @@ import { Search, Filter } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
-import { AppCard } from '@/components/shared/app-card'
-import { GAME_METADATA } from '@/modules/games/registry'
+import { UnifiedItem } from '@/components/shared/unified-item'
+import { ALL_GAMES } from '@/modules/games/registry'
+import { filterGames, getUniqueCategories } from '@/modules/games/catalog-logic'
+import { GameCategory } from '@/modules/games/types'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useState, useMemo } from 'react'
@@ -13,24 +15,27 @@ import { useState, useMemo } from 'react'
 export default function GamesCatalog() {
 	const router = useRouter()
 	const [searchQuery, setSearchQuery] = useState('')
-	const [selectedCategory, setSelectedCategory] = useState('All')
+	const [selectedCategory, setSelectedCategory] = useState<
+		GameCategory | 'All'
+	>('All')
 
-	const games = Object.values(GAME_METADATA)
-	const allCategories = [
-		'All',
-		...Array.from(new Set(games.map(g => g.category))),
-	]
+	// Cache the raw metadata list to avoid repeated object Object.values calls
+	const allGamesMetadata = useMemo(
+		() => Object.values(ALL_GAMES).map(g => g.meta),
+		[],
+	)
 
-	const filteredGames = useMemo(() => {
-		return games.filter(game => {
-			const matchesSearch = game.title
-				.toLowerCase()
-				.includes(searchQuery.toLowerCase())
-			const matchesCategory =
-				selectedCategory === 'All' || game.category === selectedCategory
-			return matchesSearch && matchesCategory
-		})
-	}, [games, searchQuery, selectedCategory])
+	// Pure logic: extract categories
+	const allCategories = useMemo(
+		() => getUniqueCategories(allGamesMetadata),
+		[allGamesMetadata],
+	)
+
+	// Pure logic: filter games
+	const filteredGames = useMemo(
+		() => filterGames(allGamesMetadata, searchQuery, selectedCategory),
+		[allGamesMetadata, searchQuery, selectedCategory],
+	)
 
 	return (
 		<div className='space-y-10'>
@@ -48,7 +53,7 @@ export default function GamesCatalog() {
 								placeholder='Search catalog...'
 								value={searchQuery}
 								onChange={e => setSearchQuery(e.target.value)}
-								className='pl-12 md:pl-14 h-14 md:h-16 bg-secondary/10 border-none rounded-[20px] md:rounded-[24px] focus-visible:ring-primary text-base md:text-lg font-medium'
+								className='pl-12 md:pl-14 h-14 md:h-16 bg-secondary/10 border-none rounded-[20px] md:rounded-[24px] focus-visible:ring-primary text-base md:text-lg font-medium transition-all focus:bg-secondary/20'
 							/>
 						</div>
 						<Button
@@ -68,7 +73,7 @@ export default function GamesCatalog() {
 							variant={selectedCategory === cat ? 'default' : 'secondary'}
 							onClick={() => setSelectedCategory(cat)}
 							className={cn(
-								'rounded-full px-8 h-12 font-bold transition-all',
+								'rounded-full px-8 h-12 font-bold transition-all whitespace-nowrap',
 								selectedCategory === cat
 									? 'bg-primary text-primary-foreground'
 									: 'bg-secondary/10 text-secondary-foreground hover:bg-secondary/20',
@@ -80,7 +85,7 @@ export default function GamesCatalog() {
 				</div>
 			</section>
 
-			{/* Unified Grid (radius 32px) */}
+			{/* Unified Grid */}
 			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
 				{filteredGames.map((game, i) => (
 					<motion.div
@@ -89,7 +94,7 @@ export default function GamesCatalog() {
 						animate={{ opacity: 1, scale: 1 }}
 						transition={{ delay: i * 0.05 }}
 					>
-						<AppCard
+						<UnifiedItem
 							variant='catalog'
 							title={game.title}
 							category={game.category}
@@ -112,7 +117,7 @@ export default function GamesCatalog() {
 							setSearchQuery('')
 							setSelectedCategory('All')
 						}}
-						className='mt-2 text-primary font-black'
+						className='mt-2 text-primary font-black uppercase tracking-tighter'
 					>
 						Reset Filters
 					</Button>

@@ -4,7 +4,7 @@ import { TrendingUp, Info, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { AppCard } from '@/components/shared/app-card'
+import { UnifiedItem } from '@/components/shared/unified-item'
 import { useRouter } from 'next/navigation'
 
 export default function Home() {
@@ -59,7 +59,7 @@ export default function Home() {
 							animate={{ opacity: 1, scale: 1 }}
 							transition={{ delay: i * 0.05 }}
 						>
-							<AppCard
+							<UnifiedItem
 								variant='recent'
 								title={game.title}
 								subtitle={game.lastPlayed.toUpperCase()}
@@ -72,7 +72,7 @@ export default function Home() {
 
 			{/* Unified Surface Sections */}
 			<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-				<AppCard
+				<UnifiedItem
 					title='Performance'
 					icon={TrendingUp}
 					actionLabel='View Analytics'
@@ -85,8 +85,8 @@ export default function Home() {
 					}
 				/>
 
-				<AppCard title='System Status' icon={Info} onAction={() => {}}>
-					<div className='space-y-4'>
+				<UnifiedItem title='System Status' icon={Info} onAction={() => {}}>
+					<div className='space-y-4 pt-2'>
 						<div className='flex items-center gap-3 p-4 rounded-2xl bg-secondary/10'>
 							<div className='w-2 h-2 rounded-full bg-primary animate-pulse' />
 							<p className='text-sm font-bold text-foreground/70'>
@@ -100,7 +100,7 @@ export default function Home() {
 							</p>
 						</div>
 					</div>
-				</AppCard>
+				</UnifiedItem>
 			</div>
 		</div>
 	)
