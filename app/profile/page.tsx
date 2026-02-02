@@ -99,7 +99,7 @@ export default function ProfilePage() {
 	]
 
 	return (
-		<div className='max-w-6xl mx-auto space-y-8 pb-20'>
+		<div className='space-y-8 pb-20'>
 			{/* TOP CARD: PLAYER DETAILS */}
 			<section className='bg-card rounded-[32px] border border-white/5 p-6 md:p-8 space-y-8 shadow-2xl relative overflow-hidden'>
 				<div className='flex items-center justify-between'>
