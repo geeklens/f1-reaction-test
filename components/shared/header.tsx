@@ -83,7 +83,7 @@ export function Header() {
 						</DialogTrigger>
 						<DialogContent
 							showCloseButton={false}
-							className='max-w-none w-screen h-screen p-0 bg-background/90 backdrop-blur-3xl border-none rounded-none gap-0 overflow-hidden shadow-none top-0 left-0 translate-x-0 translate-y-0 flex flex-col'
+							className='w-screen h-screen sm:h-auto sm:max-w-[600px] sm:w-full p-0 bg-background/95 sm:bg-background/80 backdrop-blur-3xl border-none sm:border-white/10 rounded-none sm:rounded-[32px] gap-0 overflow-hidden shadow-none sm:shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] top-0 left-0 translate-x-0 translate-y-0 sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] flex flex-col'
 						>
 							<div className='p-6 border-b border-white/5 flex-none'>
 								<div className='relative group'>

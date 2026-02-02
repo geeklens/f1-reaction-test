@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function NeuralReaction() {
+export default function NeonRacer() {
 	useEffect(() => {
 		console.log('Neon Racer initialized')
 		return () => console.log('Neon Racer destroyed')

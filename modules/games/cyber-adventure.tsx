@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function NeuralReaction() {
+export default function CyberAdventure() {
 	useEffect(() => {
 		console.log('Cyber Adventure initialized')
 		return () => console.log('Cyber Adventure destroyed')

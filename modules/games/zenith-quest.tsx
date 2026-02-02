@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function NeuralReaction() {
+export default function ZenithQuest() {
 	useEffect(() => {
 		console.log('Zenith Quest initialized')
 		return () => console.log('Zenith Quest destroyed')

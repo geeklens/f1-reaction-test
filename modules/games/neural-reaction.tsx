@@ -26,6 +26,12 @@ export default function NeuralReaction() {
 		}
 	}, [])
 
+	/**
+	 * Starts the F1-style light sequence.
+	 * 1. Cycles through 5 red lights.
+	 * 2. Waits for a random delay.
+	 * 3. Turns off lights and sets status to 'ready' to begin reaction timing.
+	 */
 	const startSequence = () => {
 		setStatus('starting')
 		setLightsCount(0)

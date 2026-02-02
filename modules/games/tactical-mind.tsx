@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function NeuralReaction() {
+export default function TacticalMind() {
 	useEffect(() => {
 		console.log('Tactical Mind initialized')
 		return () => console.log('Tactical Mind destroyed')

@@ -1,11 +1,10 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 import { GAME_METADATA, GAMES } from '@/modules/games/registry'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, Gamepad2 } from 'lucide-react'
-import { Suspense, useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 export default function GamePage() {
@@ -15,20 +14,7 @@ export default function GamePage() {
 	const gameSlug =
 		typeof slug === 'string' ? slug : Array.isArray(slug) ? slug[0] : ''
 	const metadata = GAME_METADATA[gameSlug]
-
-	const DynamicGame = useMemo(() => {
-		if (GAMES[gameSlug]) {
-			return dynamic(GAMES[gameSlug], {
-				loading: () => (
-					<div className='flex items-center justify-center min-h-[400px]'>
-						<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-primary'></div>
-					</div>
-				),
-				ssr: false,
-			})
-		}
-		return null
-	}, [gameSlug])
+	const DynamicGame = GAMES[gameSlug]
 
 	if (!metadata || !DynamicGame) {
 		return (

@@ -7,11 +7,30 @@ import { motion } from 'framer-motion'
 import { AppCard } from '@/components/shared/app-card'
 import { GAME_METADATA } from '@/modules/games/registry'
 import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { useState, useMemo } from 'react'
 
 export default function GamesCatalog() {
 	const router = useRouter()
+	const [searchQuery, setSearchQuery] = useState('')
+	const [selectedCategory, setSelectedCategory] = useState('All')
+
 	const games = Object.values(GAME_METADATA)
-	const categories = ['All', 'Action', 'RPG', 'Strategy', 'Shooter', 'Sports']
+	const allCategories = [
+		'All',
+		...Array.from(new Set(games.map(g => g.category))),
+	]
+
+	const filteredGames = useMemo(() => {
+		return games.filter(game => {
+			const matchesSearch = game.title
+				.toLowerCase()
+				.includes(searchQuery.toLowerCase())
+			const matchesCategory =
+				selectedCategory === 'All' || game.category === selectedCategory
+			return matchesSearch && matchesCategory
+		})
+	}, [games, searchQuery, selectedCategory])
 
 	return (
 		<div className='space-y-10'>
@@ -27,6 +46,8 @@ export default function GamesCatalog() {
 							<Search className='absolute left-5 md:left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground' />
 							<Input
 								placeholder='Search catalog...'
+								value={searchQuery}
+								onChange={e => setSearchQuery(e.target.value)}
 								className='pl-12 md:pl-14 h-14 md:h-16 bg-secondary/10 border-none rounded-[20px] md:rounded-[24px] focus-visible:ring-primary text-base md:text-lg font-medium'
 							/>
 						</div>
@@ -41,11 +62,17 @@ export default function GamesCatalog() {
 
 				{/* Unified Categories (Pills) */}
 				<div className='flex gap-2 overflow-x-auto pb-2 scrollbar-hide'>
-					{categories.map((cat, i) => (
+					{allCategories.map(cat => (
 						<Button
 							key={cat}
-							variant={i === 0 ? 'default' : 'secondary'}
-							className={`rounded-full px-8 h-12 font-bold transition-all ${i === 0 ? 'bg-primary text-primary-foreground' : 'bg-secondary/10 text-secondary-foreground hover:bg-secondary/20'}`}
+							variant={selectedCategory === cat ? 'default' : 'secondary'}
+							onClick={() => setSelectedCategory(cat)}
+							className={cn(
+								'rounded-full px-8 h-12 font-bold transition-all',
+								selectedCategory === cat
+									? 'bg-primary text-primary-foreground'
+									: 'bg-secondary/10 text-secondary-foreground hover:bg-secondary/20',
+							)}
 						>
 							{cat}
 						</Button>
@@ -55,7 +82,7 @@ export default function GamesCatalog() {
 
 			{/* Unified Grid (radius 32px) */}
 			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
-				{games.map((game, i) => (
+				{filteredGames.map((game, i) => (
 					<motion.div
 						key={game.slug}
 						initial={{ opacity: 0, scale: 0.95 }}
@@ -73,6 +100,24 @@ export default function GamesCatalog() {
 					</motion.div>
 				))}
 			</div>
+
+			{filteredGames.length === 0 && (
+				<div className='flex flex-col items-center justify-center py-20 bg-secondary/5 rounded-[32px] border-2 border-dashed border-border/50'>
+					<p className='text-muted-foreground font-bold uppercase tracking-widest text-xs'>
+						No games found matching your search
+					</p>
+					<Button
+						variant='link'
+						onClick={() => {
+							setSearchQuery('')
+							setSelectedCategory('All')
+						}}
+						className='mt-2 text-primary font-black'
+					>
+						Reset Filters
+					</Button>
+				</div>
+			)}
 		</div>
 	)
 }

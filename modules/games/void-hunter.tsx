@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function NeuralReaction() {
+export default function VoidHunter() {
 	useEffect(() => {
 		console.log('Void Hunter initialized')
 		return () => console.log('Void Hunter destroyed')
