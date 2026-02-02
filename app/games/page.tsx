@@ -17,22 +17,24 @@ export default function GamesCatalog() {
 		<div className='space-y-10'>
 			{/* M3 Search Bar */}
 			<section className='space-y-6'>
-				<div className='flex flex-col md:flex-row md:items-center justify-between gap-6'>
-					<h2 className='text-4xl font-bold tracking-tight'>Catalog</h2>
+				<div className='flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6'>
+					<h2 className='text-3xl md:text-4xl font-bold tracking-tight'>
+						Catalog
+					</h2>
 
 					<div className='flex items-center gap-3 w-full md:w-auto'>
 						<div className='relative flex-1 md:w-80'>
-							<Search className='absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground' />
+							<Search className='absolute left-5 md:left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground' />
 							<Input
 								placeholder='Search catalog...'
-								className='pl-14 h-16 bg-secondary/10 border-none rounded-[24px] focus-visible:ring-primary text-lg font-medium'
+								className='pl-12 md:pl-14 h-14 md:h-16 bg-secondary/10 border-none rounded-[20px] md:rounded-[24px] focus-visible:ring-primary text-base md:text-lg font-medium'
 							/>
 						</div>
 						<Button
 							variant='secondary'
-							className='h-16 w-16 rounded-[24px] bg-secondary/10 border-none hover:bg-secondary/20'
+							className='h-14 w-14 md:h-16 md:w-16 rounded-[20px] md:rounded-[24px] bg-secondary/10 border-none hover:bg-secondary/20 shrink-0'
 						>
-							<Filter className='h-6 w-6' />
+							<Filter className='h-5 w-5 md:h-6 md:w-6' />
 						</Button>
 					</div>
 				</div>

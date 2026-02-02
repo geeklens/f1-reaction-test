@@ -20,8 +20,8 @@ export function HeaderTitle() {
 	}
 
 	return (
-		<Link href='/' className='absolute left-1/2 -translate-x-1/2 z-10'>
-			<h1 className='text-lg md:text-xl font-black tracking-[0.2em] text-foreground/90 uppercase'>
+		<Link href='/'>
+			<h1 className='text-base md:text-xl font-black tracking-[0.1em] md:tracking-[0.2em] text-foreground/90 uppercase whitespace-nowrap'>
 				{getTitle()}
 			</h1>
 		</Link>

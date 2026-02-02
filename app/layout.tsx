@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Gamepad2, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { HeaderTitle } from '@/components/shared/header-title'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -33,29 +32,28 @@ export default function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col`}
 			>
 				{/* Material 3 Header */}
-				<header className='sticky top-0 z-50 w-full bg-background/80 backdrop-blur-2xl px-8'>
-					<div className='max-w-7xl mx-auto h-24 flex items-center justify-between relative'>
+				<header className='sticky top-0 z-50 w-full bg-background/80 backdrop-blur-2xl px-4 md:px-8'>
+					<div className='max-w-7xl mx-auto h-16 md:h-24 flex justify-between items-center relative'>
 						{/* Left: Catalog Pill */}
-						<div className='flex-1 flex justify-start'>
+						<div className='flex justify-start'>
 							<Link href='/games'>
 								<Button
 									variant='secondary'
-									className='m3-button-tonal gap-3 px-6'
+									className='m3-button-tonal gap-2 md:gap-3 px-3 md:px-6'
 								>
 									<Gamepad2 className='h-5 w-5' />
-									<span className='font-bold tracking-wide'>Catalog</span>
+									<span className='font-bold tracking-wide hidden md:inline'>
+										Catalog
+									</span>
 								</Button>
 							</Link>
 						</div>
 
-						{/* Middle: Dynamic Page Title */}
-						<HeaderTitle />
-
-						{/* Right: Profile Avatar in a tonal circle */}
-						<div className='flex-1 flex justify-end'>
+						{/* Right: Profile Avatar */}
+						<div className='flex justify-end items-center gap-2 md:gap-4'>
 							<Link href='/profile'>
 								<div className='p-1 rounded-full bg-secondary hover:bg-accent transition-all cursor-pointer'>
-									<Avatar className='h-11 w-11 border-none'>
+									<Avatar className='h-9 w-9 md:h-11 md:w-11 border-none'>
 										<AvatarImage src='https://github.com/shadcn.png' />
 										<AvatarFallback>GK</AvatarFallback>
 									</Avatar>
@@ -65,7 +63,7 @@ export default function RootLayout({
 					</div>
 				</header>
 
-				<main className='flex-1 px-8 py-6 h-full'>
+				<main className='flex-1 px-4 md:px-8 py-6 h-full'>
 					<div className='max-w-7xl mx-auto w-full'>{children}</div>
 				</main>
 			</body>

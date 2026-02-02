@@ -20,18 +20,18 @@ export default function Home() {
 	]
 
 	return (
-		<div className='space-y-10'>
+		<div className='space-y-6 md:space-y-10 pb-10'>
 			{/* M3 Welcome Section */}
-			<section className='py-6'>
+			<section className='py-4 md:py-6'>
 				<motion.div
 					initial={{ opacity: 0, y: 10 }}
 					animate={{ opacity: 1, y: 0 }}
-					className='space-y-2'
+					className='space-y-1 md:space-y-2'
 				>
-					<h2 className='text-4xl md:text-5xl font-bold tracking-tight text-foreground'>
+					<h2 className='text-3xl md:text-5xl font-bold tracking-tight text-foreground'>
 						Hi, Geek
 					</h2>
-					<p className='text-muted-foreground text-lg font-medium'>
+					<p className='text-muted-foreground text-base md:text-lg font-medium'>
 						Ready for your next session?
 					</p>
 				</motion.div>
