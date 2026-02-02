@@ -12,6 +12,9 @@ import {
 	Trophy,
 	User,
 	ChevronRight,
+	Settings,
+	Shield,
+	LogOut,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -24,6 +27,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { CommandRegistry, Command } from '@/modules/navigation/commands'
 import { useRouter } from 'next/navigation'
 import { UnifiedItem } from '@/components/shared/unified-item'
@@ -111,7 +122,7 @@ export function Header() {
 						</DialogTrigger>
 						<DialogContent
 							showCloseButton={false}
-							className='w-screen h-screen sm:h-auto sm:max-w-[600px] sm:w-full p-0 bg-background/95 sm:bg-background/80 backdrop-blur-3xl border-none sm:border-white/10 rounded-none sm:rounded-[32px] gap-0 overflow-hidden shadow-none sm:shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] top-0 left-0 translate-x-0 translate-y-0 sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] flex flex-col'
+							className='w-full max-w-none h-[100dvh] sm:h-auto sm:max-w-[600px] sm:w-[95%] p-0 bg-background/95 sm:bg-background/80 backdrop-blur-3xl border-none sm:border-white/10 rounded-none sm:rounded-[32px] gap-0 overflow-hidden shadow-none sm:shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] top-0 left-0 translate-x-0 translate-y-0 sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] flex flex-col'
 						>
 							<DialogHeader className='sr-only'>
 								<DialogTitle>Search Palette</DialogTitle>
@@ -120,16 +131,16 @@ export function Header() {
 								</DialogDescription>
 							</DialogHeader>
 
-							<div className='p-6 border-b border-white/5 flex-none'>
+							<div className='p-4 sm:p-6 border-b border-white/5 flex-none'>
 								<div className='relative group'>
 									<Search className='absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary transition-transform group-focus-within:scale-110' />
 									<Input
-										placeholder='Search for precision tests, stats or settings...'
+										placeholder='Search for precision tests...'
 										value={searchQuery}
 										onChange={e => setSearchQuery(e.target.value)}
-										className='h-16 pl-14 bg-white/[0.03] border-white/10 rounded-[20px] text-lg font-medium focus:ring-primary focus:bg-white/[0.05] transition-all'
+										className='h-12 sm:h-16 pl-12 sm:pl-14 bg-white/[0.03] border-white/10 rounded-xl sm:rounded-[20px] text-base sm:text-lg font-medium focus:ring-primary focus:bg-white/[0.05] transition-all'
 									/>
-									<div className='absolute right-4 top-1/2 -translate-y-1/2 flex gap-1 opacity-50'>
+									<div className='absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex gap-1 opacity-50'>
 										<kbd className='h-5 px-1.5 rounded bg-white/10 text-[10px] font-mono flex items-center justify-center'>
 											ESC
 										</kbd>
@@ -137,7 +148,7 @@ export function Header() {
 								</div>
 							</div>
 
-							<div className='flex-1 overflow-y-auto p-4 scrollbar-hide sm:max-h-[450px]'>
+							<div className='flex-1 overflow-y-auto p-3 sm:p-4 scrollbar-hide max-h-none sm:max-h-[450px]'>
 								<div className='space-y-6'>
 									{/* Search Results */}
 									{searchResults.length > 0 && (
@@ -192,7 +203,7 @@ export function Header() {
 										<h4 className='px-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60'>
 											Trending Now
 										</h4>
-										<div className='grid grid-cols-2 gap-2 px-2'>
+										<div className='grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 gap-2 px-2'>
 											{trendingGames.map(game => (
 												<UnifiedItem
 													key={game.id}
@@ -200,7 +211,7 @@ export function Header() {
 													icon={game.icon}
 													title={game.title}
 													onClick={() => handleCommand(game)}
-													className='p-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all uppercase italic text-[10px] font-black'
+													className='p-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all uppercase italic text-[9px] sm:text-[10px] font-black'
 												/>
 											))}
 										</div>
@@ -229,13 +240,15 @@ export function Header() {
 								</div>
 							</div>
 
-							<div className='p-4 bg-white/5 flex flex-none items-center justify-between text-[10px] font-bold text-muted-foreground uppercase tracking-widest border-t border-white/5'>
-								<div className='flex items-center gap-4'>
+							<div className='p-4 bg-white/5 flex flex-none items-center justify-between text-[8px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-widest border-t border-white/5'>
+								<div className='flex items-center gap-3 sm:gap-4'>
 									<span className='flex items-center gap-1'>
-										<kbd className='px-1 rounded bg-white/10'>↵</kbd> Select
+										<kbd className='px-1 rounded bg-white/10'>↵</kbd>{' '}
+										<span className='hidden xs:inline'>Select</span>
 									</span>
 									<span className='flex items-center gap-1'>
-										<kbd className='px-1 rounded bg-white/10'>↑↓</kbd> Navigate
+										<kbd className='px-1 rounded bg-white/10'>↑↓</kbd>{' '}
+										<span className='hidden xs:inline'>Navigate</span>
 									</span>
 								</div>
 								<span>Antigravity Engine Search</span>

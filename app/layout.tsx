@@ -29,11 +29,7 @@ export default function RootLayout({
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col`}
 			>
-				<Header />
-
-				<main className='flex-1 px-4 md:px-8 py-6 h-full'>
-					<div className='max-w-7xl mx-auto w-full'>{children}</div>
-				</main>
+				{children}
 			</body>
 		</html>
 	)

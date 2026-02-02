@@ -169,28 +169,30 @@ export function UnifiedItem({
 		return (
 			<div
 				className={cn(
-					'flex items-center justify-between group',
+					'flex items-center justify-between group gap-3',
 					(onClick || onAction) && 'cursor-pointer',
 					className,
 				)}
 				onClick={onAction || onClick}
 			>
-				<div className='flex items-center gap-4 min-w-0 overflow-hidden'>
-					<div className='p-2.5 rounded-xl bg-secondary/20 text-primary group-hover:scale-110 transition-transform flex-shrink-0'>
+				<div className='flex items-center gap-2 sm:gap-4 min-w-0 overflow-hidden'>
+					<div className='hidden min-[400px]:flex p-2 sm:p-2.5 rounded-xl bg-secondary/20 text-primary group-hover:scale-110 transition-transform flex-shrink-0'>
 						<Icon className='w-4 h-4' />
 					</div>
 					<div className='space-y-0.5 min-w-0'>
-						<p className='text-[11px] font-bold text-foreground leading-none'>
+						<p className='text-[10px] sm:text-[11px] font-bold text-foreground leading-none truncate'>
 							{title}
 						</p>
 						{(subtitle || description) && (
-							<p className='text-[9px] text-muted-foreground uppercase tracking-widest font-bold leading-none truncate'>
+							<p className='text-[8px] sm:text-[9px] text-muted-foreground uppercase tracking-widest font-black leading-tight truncate'>
 								{subtitle || description}
 							</p>
 						)}
 					</div>
 				</div>
-				{rightAction && <div className='flex-shrink-0'>{rightAction}</div>}
+				{rightAction && (
+					<div className='flex-shrink-0 flex items-center'>{rightAction}</div>
+				)}
 			</div>
 		)
 	}

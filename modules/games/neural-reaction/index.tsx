@@ -45,7 +45,7 @@ export default function NeuralReaction() {
 	return (
 		<div className='space-y-8'>
 			<div
-				className={`relative h-[500px] w-full rounded-[32px] overflow-hidden cursor-pointer ${
+				className={`relative h-[400px] sm:h-[500px] w-full rounded-[32px] overflow-hidden cursor-pointer ${
 					status === 'running'
 						? 'bg-primary/20'
 						: status === 'false-start'
@@ -66,26 +66,26 @@ export default function NeuralReaction() {
 					/>
 				</div>
 
-				<div className='relative z-10 h-full w-full flex flex-col items-center pt-20 select-none'>
+				<div className='relative z-10 h-full w-full flex flex-col items-center pt-10 sm:pt-20 select-none'>
 					{/* F1 Lights Housing */}
-					<div className='bg-zinc-900 rounded-[24px] p-6 shadow-2xl border-4 border-zinc-800 flex gap-4 md:gap-8'>
+					<div className='bg-zinc-900 rounded-[20px] sm:rounded-[24px] p-4 sm:p-6 shadow-2xl border-4 border-zinc-800 flex gap-2 xs:gap-4 md:gap-8 scale-90 xs:scale-100 transition-transform'>
 						{[0, 1, 2, 3, 4].map(idx => (
-							<div key={idx} className='flex flex-col gap-3'>
+							<div key={idx} className='flex flex-col gap-2 xs:gap-3'>
 								<div
-									className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-4 border-zinc-800 ${
+									className={`w-8 h-8 xs:w-10 xs:h-10 md:w-14 md:h-14 rounded-full border-2 xs:border-4 border-zinc-800 ${
 										status === 'running'
-											? 'bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.8)]'
+											? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.8)]'
 											: lightsCount > idx
-												? 'bg-red-600 shadow-[0_0_30px_rgba(220,38,38,0.8)]'
+												? 'bg-red-600 shadow-[0_0_20px_rgba(220,38,38,0.8)]'
 												: 'bg-zinc-950'
 									}`}
 								/>
 								<div
-									className={`w-10 h-10 md:w-14 md:h-14 rounded-full border-4 border-zinc-800 ${
+									className={`w-8 h-8 xs:w-10 xs:h-10 md:w-14 md:h-14 rounded-full border-2 xs:border-4 border-zinc-800 ${
 										status === 'running'
-											? 'bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.8)]'
+											? 'bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.8)]'
 											: lightsCount > idx
-												? 'bg-red-600 shadow-[0_0_30px_rgba(220,38,38,0.8)]'
+												? 'bg-red-600 shadow-[0_0_20px_rgba(220,38,38,0.8)]'
 												: 'bg-zinc-950'
 									}`}
 								/>
@@ -94,7 +94,7 @@ export default function NeuralReaction() {
 					</div>
 
 					{/* Status Message Area */}
-					<div className='mt-16 w-full max-w-xl px-6 flex flex-col items-center justify-start h-48 relative'>
+					<div className='mt-10 sm:mt-16 w-full max-w-xl px-6 flex flex-col items-center justify-start h-40 sm:h-48 relative text-center'>
 						<AnimatePresence mode='wait'>
 							{status === 'idle' && (
 								<motion.div
@@ -103,15 +103,15 @@ export default function NeuralReaction() {
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
 									transition={{ duration: 0 }}
-									className='text-center space-y-4'
+									className='space-y-4'
 								>
-									<div className='p-4 rounded-3xl bg-primary/10 inline-block mb-2'>
-										<Zap className='w-8 h-8 text-primary' />
+									<div className='p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-primary/10 inline-block mb-1'>
+										<Zap className='w-6 h-6 sm:w-8 sm:h-8 text-primary' />
 									</div>
-									<h3 className='text-3xl font-black italic uppercase tracking-tighter'>
+									<h3 className='text-2xl sm:text-3xl font-black italic uppercase tracking-tighter'>
 										Neural Reaction
 									</h3>
-									<p className='text-muted-foreground font-bold uppercase tracking-widest text-[10px]'>
+									<p className='text-muted-foreground font-bold uppercase tracking-widest text-[8px] sm:text-[10px]'>
 										Click or Press [SPACE] to start
 									</p>
 								</motion.div>
@@ -124,17 +124,16 @@ export default function NeuralReaction() {
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
 									transition={{ duration: 0 }}
-									className='text-center'
 								>
-									<p className='text-2xl font-black italic uppercase tracking-tighter'>
+									<p className='text-xl sm:text-2xl font-black italic uppercase tracking-tighter'>
 										Wait for lights out...
 									</p>
 								</motion.div>
 							)}
 
 							{status === 'running' && (
-								<div key='running' className='text-center'>
-									<h2 className='text-6xl md:text-8xl font-black italic uppercase tracking-tight text-primary drop-shadow-[0_0_30px_rgba(var(--primary),0.5)]'>
+								<div key='running'>
+									<h2 className='text-5xl xs:text-6xl md:text-8xl font-black italic uppercase tracking-tight text-primary drop-shadow-[0_0_30px_rgba(var(--primary),0.5)]'>
 										CLICK!
 									</h2>
 								</div>
@@ -147,28 +146,28 @@ export default function NeuralReaction() {
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
 									transition={{ duration: 0 }}
-									className='text-center space-y-4'
+									className='space-y-4'
 								>
 									<div className='space-y-1'>
-										<p className='text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]'>
+										<p className='text-[8px] sm:text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]'>
 											Reaction Time
 										</p>
-										<h2 className='text-6xl font-black italic uppercase tracking-tighter text-primary leading-none'>
+										<h2 className='text-5xl sm:text-6xl font-black italic uppercase tracking-tighter text-primary leading-none'>
 											{reactionTime?.toFixed(0)}
-											<span className='text-2xl ml-1'>ms</span>
+											<span className='text-xl sm:text-2xl ml-1'>ms</span>
 										</h2>
 									</div>
 
 									<div className='flex justify-center'>
 										<Button
 											variant='secondary'
-											className='m3-button-tonal gap-2 px-8 h-10 text-xs'
+											className='m3-button-tonal gap-2 px-6 sm:px-8 h-9 sm:h-10 text-[10px] sm:text-xs'
 											onClick={e => {
 												e.stopPropagation()
 												start()
 											}}
 										>
-											<RotateCcw className='w-4 h-4' />
+											<RotateCcw className='w-3.5 h-3.5 sm:w-4 sm:h-4' />
 											Restart
 										</Button>
 									</div>
@@ -182,20 +181,20 @@ export default function NeuralReaction() {
 									animate={{ opacity: 1 }}
 									exit={{ opacity: 0 }}
 									transition={{ duration: 0 }}
-									className='text-center space-y-3'
+									className='space-y-3'
 								>
-									<div className='p-2 rounded-2xl bg-destructive/10 inline-block mb-1 text-destructive'>
-										<AlertTriangle className='w-6 h-6' />
+									<div className='p-2 rounded-xl bg-destructive/10 inline-block mb-1 text-destructive'>
+										<AlertTriangle className='w-5 h-5 sm:w-6 sm:h-6' />
 									</div>
-									<h3 className='text-2xl font-black italic uppercase tracking-tighter text-destructive'>
+									<h3 className='text-xl sm:text-2xl font-black italic uppercase tracking-tighter text-destructive leading-none'>
 										Jump Start!
 									</h3>
-									<p className='text-muted-foreground font-bold uppercase tracking-widest text-[10px]'>
-										You clicked before the lights went out
+									<p className='text-muted-foreground font-bold uppercase tracking-widest text-[8px] sm:text-[10px]'>
+										You clicked before lights out
 									</p>
 									<Button
 										variant='secondary'
-										className='m3-button-tonal gap-2 px-8 h-10 text-xs'
+										className='m3-button-tonal gap-2 px-6 sm:px-8 h-9 sm:h-10 text-[10px] sm:text-xs'
 										onClick={e => {
 											e.stopPropagation()
 											start()
@@ -210,9 +209,9 @@ export default function NeuralReaction() {
 				</div>
 
 				{/* Corner Decorative Element */}
-				<div className='absolute bottom-8 right-8 flex items-center gap-3 opacity-20'>
-					<Timer className='w-5 h-5 text-primary' />
-					<span className='text-[10px] font-black uppercase tracking-widest'>
+				<div className='absolute bottom-4 right-4 sm:bottom-8 sm:right-8 flex items-center gap-2 sm:gap-3 opacity-20'>
+					<Timer className='w-4 h-4 sm:w-5 sm:h-5 text-primary' />
+					<span className='text-[8px] sm:text-[10px] font-black uppercase tracking-widest'>
 						Precision v4.0
 					</span>
 				</div>

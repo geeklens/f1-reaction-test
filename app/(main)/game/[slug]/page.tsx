@@ -30,7 +30,7 @@ export default function GamePage() {
 
 	return (
 		<div className='space-y-4 md:space-y-6 pb-10'>
-			<div className='flex flex-col sm:flex-row sm:items-center gap-4 justify-between'>
+			<div className='flex items-center gap-4 justify-between'>
 				<Button
 					variant='ghost'
 					onClick={() => router.back()}
@@ -40,18 +40,13 @@ export default function GamePage() {
 					Back
 				</Button>
 
-				<div className='flex items-center gap-3'>
-					<div className='w-9 h-9 md:w-10 md:h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0'>
-						<Gamepad2 className='w-5 h-5 md:w-6 md:h-6' />
-					</div>
-					<div className='min-w-0'>
-						<h1 className='text-lg md:text-xl font-black italic uppercase leading-none truncate'>
-							{meta.title}
-						</h1>
-						<p className='text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1'>
-							In-game session
-						</p>
-					</div>
+				<div className='text-right'>
+					<h1 className='text-lg md:text-xl font-black italic uppercase leading-none truncate'>
+						{meta.title}
+					</h1>
+					<p className='text-[8px] md:text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1.5'>
+						In-game session
+					</p>
 				</div>
 			</div>
 

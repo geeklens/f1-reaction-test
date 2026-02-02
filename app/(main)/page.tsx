@@ -69,39 +69,6 @@ export default function Home() {
 					))}
 				</div>
 			</section>
-
-			{/* Unified Surface Sections */}
-			<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-				<UnifiedItem
-					title='Performance'
-					icon={TrendingUp}
-					actionLabel='View Analytics'
-					onAction={() => {}}
-					description={
-						<>
-							Your focus levels are{' '}
-							<span className='text-primary'>12% higher</span> than last week.
-						</>
-					}
-				/>
-
-				<UnifiedItem title='System Status' icon={Info} onAction={() => {}}>
-					<div className='space-y-4 pt-2'>
-						<div className='flex items-center gap-3 p-4 rounded-2xl bg-secondary/10'>
-							<div className='w-2 h-2 rounded-full bg-primary animate-pulse' />
-							<p className='text-sm font-bold text-foreground/70'>
-								V4.0 Precision Engine Live
-							</p>
-						</div>
-						<div className='flex items-center gap-3 px-4'>
-							<div className='w-2 h-2 rounded-full bg-muted-foreground/30' />
-							<p className='text-sm font-medium text-muted-foreground italic'>
-								Syncing global data...
-							</p>
-						</div>
-					</div>
-				</UnifiedItem>
-			</div>
 		</div>
 	)
 }
